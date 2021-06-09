@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 class MainView extends React.Component {
   constructor() {
@@ -40,15 +42,21 @@ class MainView extends React.Component {
 
     if (selectedMovie) {
       return (
-        <div className="main-view">
-          <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => { this.setSelectedMovie(newSelectedMovie); }} />
-        </div>
+        <Row className="main-view justify-content-md-center">
+          <Col md={8}>
+            <MovieView movie={selectedMovie} onBackClick={newSelectedMovie => { this.setSelectedMovie(newSelectedMovie); }} />
+          </Col>
+        </Row>
       );
     } else {
       return (
-        <div className="main-view">
-          {movies.map(movie => <MovieCard key={movie._id} movieData={movie} onMovieClick={(movie) => { this.setSelectedMovie(movie) }} />)}
-        </div>
+        <Row className="main-view justify-content-md-center">
+          {movies.map(movie =>
+            <Col md={3}>
+              <MovieCard key={movie._id} movieData={movie} onMovieClick={(movie) => { this.setSelectedMovie(movie) }} />
+            </Col>
+          )}
+        </Row>
       );
     }
   }
