@@ -1,18 +1,22 @@
 import React from 'react';
 import axios from 'axios';
 
+import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { RegistrationView } from '../registration-view/registration-view';
 
 class MainView extends React.Component {
   constructor() {
     super();
     this.state = {
       movies: [],
-      selectedMovie: null
-    }
+      selectedMovie: null,
+      user: null,
+      registered: false
+    };
   }
 
   componentDidMount() {
@@ -33,8 +37,24 @@ class MainView extends React.Component {
     });
   }
 
+  onLoggedIn(loggedInUser) {
+    this.setState({
+      user: loggedInUser
+    });
+  }
+
+  onRegistration(isRegistred) {
+    this.setState({
+      registred: isRegistred
+    });
+  }
+
   render() {
-    const { movies, selectedMovie } = this.state;
+    const { movies, selectedMovie, user, registred } = this.state;
+
+    if (!registred) return <RegistrationView onRegistration={isRegistred => this.onRegistration(isRegistred)} />;
+
+    if (!user) return <LoginView onLoggedIn={loggedInUser => this.onLoggedIn(loggedInUser)} />;
 
     if (movies.length === 0) {
       return <div className="main-view">The list is empty!</div>;
