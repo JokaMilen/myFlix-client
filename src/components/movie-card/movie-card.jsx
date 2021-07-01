@@ -2,21 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import { connect } from 'react-redux';
 
 import { Link } from "react-router-dom";
 
 export class MovieCard extends React.Component {
 
-  addToFavorites() {
-    console.log("add to favorites");
-  }
-
-  removeFromFavorites() {
-    console.log("remove to favorites");
-  }
-
   render() {
-    const { movieData, isFavorite } = this.props;
+    const { movieData, userInfo, addToFavorites, removeFromFavorites } = this.props;
+    let isFavorite = userInfo.FavoriteMovies.find(fmId => movieData._id === fmId) ? true : false;
     return (
       <Card>
         <Card.Img variant="top" src={movieData.ImagePath} />
@@ -26,12 +20,20 @@ export class MovieCard extends React.Component {
           <Link to={`/movies/${movieData._id}`}>
             <Button variant="link">Open</Button>
           </Link>
-          <Button variant="link" onClick={() => { isFavorite ? this.removeFromFavorites() : this.addToFavorites() }}>{isFavorite ? "Remove from favorites" : "Add to favorites"}</Button>
+          <Button variant="link" onClick={() => { isFavorite ? removeFromFavorites(movieData._id) : addToFavorites(movieData._id) }}>{isFavorite ? "Remove from favorites" : "Add to favorites"}</Button>
         </Card.Body>
       </Card>
     );
   }
 }
+
+let mapStateToProps = state => {
+  return {
+    userInfo: state.userInfo
+  };
+}
+
+export default connect(mapStateToProps)(MovieCard);
 
 
 MovieCard.propTypes = {
@@ -39,6 +41,5 @@ MovieCard.propTypes = {
     Title: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     ImagePath: PropTypes.string.isRequired
-  }).isRequired,
-  isFavorite: PropTypes.bool.isRequired
+  }).isRequired
 };

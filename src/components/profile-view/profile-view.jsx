@@ -2,6 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
+import MoviesList from '../movies-list/movies-list';
+
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 export class ProfileView extends React.Component {
 
   initialized = false;
@@ -82,32 +87,42 @@ export class ProfileView extends React.Component {
 
   render() {
 
-    const { onBackClick } = this.props;
+    const { onBackClick, movies, userInfo, token, addToFavorites, removeFromFavorites } = this.props;
+    let favoriteMovies = movies.filter(m => userInfo.FavoriteMovies.find(fmId => m._id === fmId) ? true : false);
 
     return (
-      <div className="profile-view">
-        <div className="profile-username">
-          <span className="label">Username: </span>
-          <input className="value" type="text" value={this.state.userName} onChange={e => this.setUsername(e.target.value)} />
-        </div>
-        <div className="profile-email">
-          <span className="label">Email: </span>
-          <input className="value" type="text" value={this.state.userEmail} onChange={e => this.setEmail(e.target.value)} />
-        </div>
-        <div className="profile-birthday">
-          <span className="label">Birthday: </span>
-          <input className="value" type="text" value={this.state.userBirthday} onChange={e => this.setBirthday(e.target.value)} />
-        </div>
-        <div className="profile-password">
-          <span className="label">New Password: </span>
-          <input className="value" type="password" value={this.state.userPassword} onChange={e => this.setPassword(e.target.value)} />
-        </div>
-        <br />
-        <button onClick={() => { this.updateUser(); }}>Save</button>&nbsp;
-        <button onClick={() => { this.removeUser(); }}>Deregister</button>
-        <br /><br />
-        <button onClick={() => { onBackClick(null); }}>Back</button>
-      </div>
+      <Col>
+        <Row className="main-view justify-content-md-center">
+          <div className="profile-view">
+            <div className="profile-username">
+              <span className="label">Username: </span>
+              <input className="value" type="text" value={this.state.userName} onChange={e => this.setUsername(e.target.value)} />
+            </div>
+            <div className="profile-email">
+              <span className="label">Email: </span>
+              <input className="value" type="text" value={this.state.userEmail} onChange={e => this.setEmail(e.target.value)} />
+            </div>
+            <div className="profile-birthday">
+              <span className="label">Birthday: </span>
+              <input className="value" type="text" value={this.state.userBirthday} onChange={e => this.setBirthday(e.target.value)} />
+            </div>
+            <div className="profile-password">
+              <span className="label">New Password: </span>
+              <input className="value" type="password" value={this.state.userPassword} onChange={e => this.setPassword(e.target.value)} />
+            </div>
+            <br />
+            <button onClick={() => { this.updateUser(); }}>Save</button>&nbsp;
+            <button onClick={() => { this.removeUser(); }}>Deregister</button>
+            <br /><br />
+            <button onClick={() => { onBackClick(null); }}>Back</button>
+            <br /><br />
+          </div>
+        </Row>
+        <Row className="main-view justify-content-md-center">
+          <MoviesList movies={favoriteMovies} userInfo={userInfo} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
+        </Row>
+      </Col>
+
     );
   }
 }
