@@ -4,7 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
-import { setMovies, setUserInfo } from '../../actions/actions';
+import { setMovies, setUserInfo, setToken } from '../../actions/actions';
 
 import { LoginView } from '../login-view/login-view';
 import { MovieView } from '../movie-view/movie-view';
@@ -22,35 +22,27 @@ import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 
 class MainView extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      token: null
-    };
-  }
 
   componentDidMount() {
     let accessToken = localStorage.getItem('token');
-    let userName = localStorage.getItem('userName');
-    if (accessToken !== null) {
-      this.setState({
-        token: accessToken
-      });
+    let username = localStorage.getItem('username');
+    if (accessToken !== null && username !== null) {
+      this.props.setToken(accessToken);
+
+      this.getUserInfo(username, accessToken);
       this.getMovies(accessToken);
-      this.getUserInfo(userName, accessToken);
     }
   }
 
   onLoggedIn(authData) {
-    console.log(authData);
-    this.setState({
-      token: authData.token
-    });
+
+    this.props.setToken(authData.token);
+    this.props.setUserInfo(authData.user);
 
     localStorage.setItem('token', authData.token);
-    localStorage.setItem('userName', authData.user.Username);
+    localStorage.setItem('username', authData.user.Username);
+
     this.getMovies(authData.token);
-    this.getUserInfo(authData.user.Username, authData.token);
   }
 
   getMovies(token) {
@@ -79,17 +71,53 @@ class MainView extends React.Component {
 
   onLoggedOut() {
     localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    this.setState({
-      token: null
-    });
+    localStorage.removeItem('username');
+    this.props.setToken(null);
+    this.props.setUserInfo(null);
     window.open('/', '_self');
   }
 
+  addToFavorites(movieId) {
+
+    const { userInfo, token } = this.props;
+
+    axios.post('https://movie-api-007.herokuapp.com/users/' + userInfo.Username + '/favorites/' + movieId, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        let newUserInfo = {
+          ...userInfo,
+          FavoriteMovies: response.data
+        }
+        this.props.setUserInfo(newUserInfo);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  }
+
+  removeFromFavorites(movieId) {
+    const { userInfo, token } = this.props;
+
+    axios.delete('https://movie-api-007.herokuapp.com/users/' + userInfo.Username + '/favorites/' + movieId, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        let newUserInfo = {
+          ...userInfo,
+          FavoriteMovies: response.data
+        }
+        this.props.setUserInfo(newUserInfo);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   render() {
-    let { movies, userInfo } = this.props;
+    let { movies, userInfo, token } = this.props;
     let userName = userInfo ? userInfo.Username : null;
-    const { token } = this.state;
 
     return (
       <Router>
@@ -117,7 +145,7 @@ class MainView extends React.Component {
               return <div className="main-view" />;
             }
 
-            return <MoviesList movies={movies} userInfo={userInfo} token={token} />;
+            return <MoviesList movies={movies} userInfo={userInfo} token={token} showFilter={true} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />;
           }} />
 
           <Route path="/register" render={() => {
@@ -185,9 +213,8 @@ class MainView extends React.Component {
               </Col>
             }
 
-            return <Col md={8}>
-              <ProfileView userInfo={userInfo} token={token} onBackClick={() => history.goBack()} onLoggedOut={() => this.onLoggedOut()} />
-            </Col>
+            return <ProfileView userInfo={userInfo} token={token} onBackClick={() => history.goBack()} onLoggedOut={() => this.onLoggedOut()} movies={movies} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />
+
           }
           } />
 
@@ -200,9 +227,10 @@ class MainView extends React.Component {
 let mapStateToProps = state => {
   return {
     movies: state.movies,
-    userInfo: state.userInfo
+    userInfo: state.userInfo,
+    token: state.token
   }
 }
 
-export default connect(mapStateToProps, { setMovies, setUserInfo })(MainView);
+export default connect(mapStateToProps, { setMovies, setUserInfo, setToken })(MainView);
 

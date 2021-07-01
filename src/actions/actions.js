@@ -1,6 +1,7 @@
 export const SET_MOVIES = 'SET_MOVIES';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_USERINFO = 'SET_USERINFO';
+export const SET_TOKEN = 'SET_TOKEN';
 
 export function setMovies(value) {
   return {
@@ -12,6 +13,13 @@ export function setMovies(value) {
 export function setUserInfo(value) {
   return {
     type: SET_USERINFO,
+    value
+  };
+}
+
+export function setToken(value) {
+  return {
+    type: SET_TOKEN,
     value
   };
 }

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { SET_FILTER, SET_MOVIES, SET_USERINFO } from '../actions/actions';
+import { SET_FILTER, SET_MOVIES, SET_TOKEN, SET_USERINFO } from '../actions/actions';
 
 function visibilityFilter(state = '', action) {
   switch (action.type) {
@@ -29,10 +29,20 @@ function userInfo(state = null, action) {
   }
 }
 
+function token(state = null, action) {
+  switch (action.type) {
+    case SET_TOKEN:
+      return action.value;
+    default:
+      return state
+  }
+}
+
 const moviesApp = combineReducers({
   visibilityFilter,
   movies,
-  userInfo
+  userInfo,
+  token
 })
 
 export default moviesApp;
