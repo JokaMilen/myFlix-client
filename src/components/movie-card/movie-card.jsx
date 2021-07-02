@@ -12,16 +12,18 @@ export class MovieCard extends React.Component {
     const { movieData, userInfo, addToFavorites, removeFromFavorites } = this.props;
     let isFavorite = userInfo.FavoriteMovies.find(fmId => movieData._id === fmId) ? true : false;
     return (
-      <Card>
+      <Card className="col-md-3 mb-3 mr-3" >
         <Card.Img variant="top" src={movieData.ImagePath} />
         <Card.Body>
           <Card.Title>{movieData.Title}</Card.Title>
           <Card.Text>{movieData.Description}</Card.Text>
-          <Link to={`/movies/${movieData._id}`}>
-            <Button variant="link">Open</Button>
-          </Link>
-          <Button variant="link" onClick={() => { isFavorite ? removeFromFavorites(movieData._id) : addToFavorites(movieData._id) }}>{isFavorite ? "Remove from favorites" : "Add to favorites"}</Button>
         </Card.Body>
+        <Card.Footer>
+          <Link to={`/movies/${movieData._id}`}>
+            <Button variant="primary">Open</Button>
+          </Link><br /><br />
+          <Button variant="secondary" onClick={() => { isFavorite ? removeFromFavorites(movieData._id) : addToFavorites(movieData._id) }}>{isFavorite ? "Remove from favorites" : "Add to favorites"}</Button>
+        </Card.Footer>
       </Card>
     );
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Col from 'react-bootstrap/Col';
 import { connect } from 'react-redux';
+import { CardDeck } from 'react-bootstrap';
 
 import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
 import MovieCard from '../movie-card/movie-card';
@@ -23,15 +24,15 @@ function MoviesList(props) {
 
   return <>
     {showFilter ? (
-      <Col md={12} style={{ margin: '1em' }}>
+      <Col md={9} style={{ margin: '1em' }}>
         <VisibilityFilterInput visibilityFilter={visibilityFilter} />
       </Col>) : ""
     }
+
     {filteredMovies.map(m => (
-      <Col md={3} key={m._id}>
-        <MovieCard movieData={m} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
-      </Col>
+      <MovieCard key={m._id} movieData={m} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
     ))}
+
   </>;
 }
 
