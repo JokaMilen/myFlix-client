@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
 
 export class GenreView extends React.Component {
 
@@ -8,15 +9,17 @@ export class GenreView extends React.Component {
 
     return (
       <div className="genre-view">
+        <br /><br />
         <div className="genre-name">
-          <span className="label">Name: </span>
+          <span className="label h5">Name: </span>
           <span className="value">{genre.Name}</span>
         </div>
         <div className="genre-description">
-          <span className="label">Description: </span>
+          <span className="label h5">Description: </span>
           <span className="value">{genre.Description}</span>
         </div>
-        <button onClick={() => { onBackClick(null); }}>Back</button>
+        <br /><br />
+        <Button variant="secondary" onClick={() => { onBackClick(null); }}>Back</Button>
       </div>
     );
   }

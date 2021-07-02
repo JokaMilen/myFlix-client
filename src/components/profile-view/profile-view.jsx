@@ -3,6 +3,8 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 
 import MoviesList from '../movies-list/movies-list';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -20,7 +22,7 @@ export class ProfileView extends React.Component {
       userName: userInfo.Username,
       userPassword: "",
       userEmail: userInfo.Email,
-      userBirthday: userInfo.Birthday ? userInfo.Birthday : ""
+      userBirthday: userInfo.Birthday ? userInfo.Birthday.split('T')[0] : ""
     };
   }
 
@@ -38,7 +40,9 @@ export class ProfileView extends React.Component {
       });
   }
 
-  updateUser() {
+  handleSubmit = (e) => {
+    e.preventDefault();
+
     const { userInfo, token, onLoggedOut } = this.props;
 
     axios.put('https://movie-api-007.herokuapp.com/users/' + userInfo.Username,
@@ -92,37 +96,46 @@ export class ProfileView extends React.Component {
 
     return (
       <Col>
-        <Row className="main-view justify-content-md-center">
-          <div className="profile-view">
-            <div className="profile-username">
-              <span className="label">Username: </span>
-              <input className="value" type="text" value={this.state.userName} onChange={e => this.setUsername(e.target.value)} />
-            </div>
-            <div className="profile-email">
-              <span className="label">Email: </span>
-              <input className="value" type="text" value={this.state.userEmail} onChange={e => this.setEmail(e.target.value)} />
-            </div>
-            <div className="profile-birthday">
-              <span className="label">Birthday: </span>
-              <input className="value" type="text" value={this.state.userBirthday} onChange={e => this.setBirthday(e.target.value)} />
-            </div>
-            <div className="profile-password">
-              <span className="label">New Password: </span>
-              <input className="value" type="password" value={this.state.userPassword} onChange={e => this.setPassword(e.target.value)} />
-            </div>
-            <br />
-            <button onClick={() => { this.updateUser(); }}>Save</button>&nbsp;
-            <button onClick={() => { this.removeUser(); }}>Deregister</button>
-            <br /><br />
-            <button onClick={() => { onBackClick(null); }}>Back</button>
-            <br /><br />
-          </div>
-        </Row>
+        <Form>
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username:</Form.Label>
+            <Form.Control type="text" placeholder="Enter username"
+              required minLength="5"
+              value={this.state.userName}
+              onChange={e => this.setUsername(e.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="formEmail">
+            <Form.Label>Email:</Form.Label>
+            <Form.Control type="email" placeholder="Enter email"
+              value={this.state.userEmail}
+              onChange={e => this.setEmail(e.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="formBirthday">
+            <Form.Label>Birthday:</Form.Label>
+            <Form.Control type="date" placeholder="Enter birthday"
+              value={this.state.userBirthday}
+              onChange={e => this.setBirthday(e.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="formPassword">
+            <Form.Label>New Password</Form.Label>
+            <Form.Control type="password" placeholder="Enter new password"
+              value={this.state.userPassword}
+              onChange={e => this.setPassword(e.target.value)} />
+          </Form.Group>
+          <Button className="mr-2" variant="primary" type="submit" onClick={this.handleSubmit}>
+            Save
+          </Button>
+          <Button className="float-right" variant="danger" onClick={() => { this.removeUser(); }}>
+            Deregister
+          </Button>
+          <Button variant="secondary" onClick={() => { onBackClick(null); }}>
+            Back
+          </Button><hr />
+        </Form>
         <Row className="main-view justify-content-md-center">
           <MoviesList movies={favoriteMovies} userInfo={userInfo} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
         </Row>
       </Col>
-
     );
   }
 }

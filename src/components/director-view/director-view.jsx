@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
 
 export class DirectorView extends React.Component {
 
@@ -8,23 +9,25 @@ export class DirectorView extends React.Component {
 
     return (
       <div className="director-view">
+        <br /><br />
         <div className="director-title">
-          <span className="label">Name: </span>
+          <span className="label h5">Name: </span>
           <span className="value">{director.Name}</span>
         </div>
         <div className="director-bio">
-          <span className="label">Bio: </span>
+          <span className="label h5">Bio: </span>
           <span className="value">{director.Bio}</span>
         </div>
         <div className="director-birth">
-          <span className="label">Birth: </span>
+          <span className="label h5">Birth: </span>
           <span className="value">{director.Birth}</span>
         </div>
         <div className="director-death">
-          <span className="label">Death: </span>
+          <span className="label h5">Death: </span>
           <span className="value">{director.Death}</span>
         </div>
-        <button onClick={() => { onBackClick(null); }}>Back</button>
+        <br /><br />
+        <Button variant="secondary" onClick={() => { onBackClick(null); }}>Back</Button>
 
       </div>
     );

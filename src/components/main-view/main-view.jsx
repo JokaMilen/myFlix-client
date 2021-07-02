@@ -17,9 +17,7 @@ import MoviesList from '../movies-list/movies-list';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Navbar } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
+import { Navbar, Nav } from 'react-bootstrap';
 
 class MainView extends React.Component {
 
@@ -121,17 +119,18 @@ class MainView extends React.Component {
 
     return (
       <Router>
-
-        {(userInfo) ?
-          <Navbar>
-            <Link to={`/users/${userName}`}>
-              <Button variant="link">{userName}</Button>
-            </Link>
-
-            <Button variant="link" onClick={() => { this.onLoggedOut(); }}>Log out</Button>
-
-          </Navbar>
-          : null}
+        <Navbar bg="light" variant="light">
+          <Navbar.Brand href="https://github.com/JokaMilen/myFlix-client" target="_blank">My-Flix-App</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link href={`/`}>Home</Nav.Link>
+          </Nav>
+          {(userInfo) ?
+            <Nav>
+              <Nav.Link href={`/users/${userName}`}>{userName}</Nav.Link>
+              <Nav.Link href={`/`} onClick={() => { this.onLoggedOut(); }}>Log out</Nav.Link>
+            </Nav>
+            : null}
+        </Navbar>
 
         <Row className="main-view justify-content-md-center">
           <Route exact path="/" render={() => {
