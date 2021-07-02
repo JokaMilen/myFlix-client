@@ -1,7 +1,6 @@
 import React from 'react';
 import Col from 'react-bootstrap/Col';
 import { connect } from 'react-redux';
-import { CardDeck } from 'react-bootstrap';
 
 import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
 import MovieCard from '../movie-card/movie-card';
@@ -12,7 +11,7 @@ const mapStateToProps = state => {
 };
 
 function MoviesList(props) {
-  const { movies, showFilter, visibilityFilter, userInfo, token, addToFavorites, removeFromFavorites } = props;
+  const { movies, showFilter, visibilityFilter, addToFavorites, removeFromFavorites } = props;
 
   let filteredMovies = movies;
 
@@ -30,7 +29,7 @@ function MoviesList(props) {
     }
 
     {filteredMovies.map(m => (
-      <MovieCard key={m._id} movieData={m} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
+      <MovieCard key={m._id} movieData={m} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
     ))}
 
   </>;

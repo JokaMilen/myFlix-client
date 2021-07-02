@@ -9,6 +9,9 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { connect } from 'react-redux';
+import { setUserInfo } from '../../actions/actions';
+
 export class ProfileView extends React.Component {
 
   initialized = false;
@@ -43,7 +46,7 @@ export class ProfileView extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { userInfo, token, onLoggedOut } = this.props;
+    const { userInfo, token } = this.props;
 
     axios.put('https://movie-api-007.herokuapp.com/users/' + userInfo.Username,
       {
@@ -56,7 +59,7 @@ export class ProfileView extends React.Component {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-        onLoggedOut();
+        this.props.setUserInfo(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -91,7 +94,7 @@ export class ProfileView extends React.Component {
 
   render() {
 
-    const { onBackClick, movies, userInfo, token, addToFavorites, removeFromFavorites } = this.props;
+    const { onBackClick, movies, userInfo, addToFavorites, removeFromFavorites } = this.props;
     let favoriteMovies = movies.filter(m => userInfo.FavoriteMovies.find(fmId => m._id === fmId) ? true : false);
 
     return (
@@ -133,12 +136,21 @@ export class ProfileView extends React.Component {
           </Button><hr />
         </Form>
         <Row className="main-view justify-content-md-center">
-          <MoviesList movies={favoriteMovies} userInfo={userInfo} token={token} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
+          <MoviesList movies={favoriteMovies} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} />
         </Row>
       </Col>
     );
   }
 }
+
+let mapStateToProps = state => {
+  return {
+    userInfo: state.userInfo,
+    token: state.token
+  };
+}
+
+export default connect(mapStateToProps, { setUserInfo })(ProfileView);
 
 ProfileView.propTypes = {
   userInfo: PropTypes.shape({
