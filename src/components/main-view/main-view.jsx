@@ -11,7 +11,7 @@ import { MovieView } from '../movie-view/movie-view';
 import { RegistrationView } from '../registration-view/registration-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
-import { ProfileView } from '../profile-view/profile-view';
+import ProfileView from '../profile-view/profile-view';
 import MoviesList from '../movies-list/movies-list';
 
 
@@ -144,7 +144,7 @@ class MainView extends React.Component {
               return <div className="main-view" />;
             }
 
-            return <MoviesList movies={movies} userInfo={userInfo} token={token} showFilter={true} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />;
+            return <MoviesList movies={movies} showFilter={true} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />;
           }} />
 
           <Route path="/register" render={() => {
@@ -212,7 +212,7 @@ class MainView extends React.Component {
               </Col>
             }
 
-            return <ProfileView userInfo={userInfo} token={token} onBackClick={() => history.goBack()} onLoggedOut={() => this.onLoggedOut()} movies={movies} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />
+            return <ProfileView onBackClick={() => history.goBack()} onLoggedOut={() => this.onLoggedOut()} movies={movies} addToFavorites={(movieId) => this.addToFavorites(movieId)} removeFromFavorites={(movieId) => this.removeFromFavorites(movieId)} />
 
           }
           } />
