@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Link } from "react-router-dom";
 
 import { setMovies, setUserInfo, setToken } from '../../actions/actions';
 
@@ -122,12 +122,12 @@ class MainView extends React.Component {
         <Navbar bg="light" variant="light">
           <Navbar.Brand href="https://github.com/JokaMilen/myFlix-client" target="_blank">My-Flix-App</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link href={`/`}>Home</Nav.Link>
+            <Nav.Link as={Link} to="/" >Home</Nav.Link>
           </Nav>
           {(userInfo) ?
             <Nav>
-              <Nav.Link href={`/users/${userName}`}>{userName}</Nav.Link>
-              <Nav.Link href={`/`} onClick={() => { this.onLoggedOut(); }}>Log out</Nav.Link>
+              <Nav.Link as={Link} to={`/users/${userName}`} >{userName}</Nav.Link>
+              <Nav.Link href="/" onClick={() => { this.onLoggedOut(); }}>Log out</Nav.Link>
             </Nav>
             : null}
         </Navbar>
